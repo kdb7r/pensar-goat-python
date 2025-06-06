@@ -4,6 +4,7 @@ import flask  # Vulnerable Flask version
 import requests  # Vulnerable requests version
 import paramiko  # Vulnerable to RCE in older versions
 import lxml.etree as ET  # Vulnerable to XXE attacks
+import os  # For reading environment variables
 
 app = flask.Flask(__name__)
 
@@ -13,7 +14,17 @@ cursor = conn.cursor()
 cursor.execute(
     "CREATE TABLE users (id INTEGER PRIMARY KEY, username TEXT, password TEXT)"
 )
-cursor.execute("INSERT INTO users (username, password) VALUES ('admin', 'password123')")
+
+# Secure credential management: Fetch admin credentials from environment variables
+admin_username = os.environ.get("ADMIN_USERNAME")
+admin_password = os.environ.get("ADMIN_PASSWORD")
+
+if admin_username and admin_password:
+    cursor.execute(
+        "INSERT INTO users (username, password) VALUES (?, ?)",
+        (admin_username, admin_password)
+    )
+
 conn.commit()
 
 
@@ -73,12 +84,18 @@ def fetch():
 
 # ======== 6. Remote Code Execution via Paramiko ========
 def run_ssh_command():
-    """Vulnerable to RCE if connecting to an untrusted SSH server"""
+    """Vulnerable to RCE if connecting to an untrusted SSH server; now requires credentials from environment variables."""
+    ssh_host = os.environ.get("SSH_HOST")
+    ssh_username = os.environ.get("SSH_USERNAME")
+    ssh_password = os.environ.get("SSH_PASSWORD")
+    if not all([ssh_host, ssh_username, ssh_password]):
+        raise RuntimeError("SSH credentials not set in environment variables (SSH_HOST, SSH_USERNAME, SSH_PASSWORD)")
+
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(
         paramiko.AutoAddPolicy()
     )  # Automatically accepting any key
-    ssh.connect("malicious-server.com", username="user", password="pass")
+    ssh.connect(ssh_host, username=ssh_username, password=ssh_password)
     stdin, stdout, stderr = ssh.exec_command("ls")
     return stdout.read()
 
