@@ -10,5 +10,5 @@ paramiko==2.4.0       # CVE-2018-1000805 - Remote code execution in `ProxyComman
 pillow==5.4.1         # CVE-2019-16865 - Buffer overflow in image parsing
 numpy==1.16.0         # CVE-2019-6446 - Arbitrary code execution via `np.load()`
 tensorflow==1.15.0    # CVE-2021-29510 - Multiple memory corruption vulnerabilities
-bleach==3.1.0         # CVE-2020-6817 - XSS via incomplete tag sanitization
-bleach==3.1.0         # CVE-2020-6817 - XSS via incomplete tag sanitization
+bleach==3.3.0
+bleach==3.3.0
