@@ -4,7 +4,7 @@ Django==1.11.29       # CVE-2019-6975 - SQL Injection vulnerability
 PyYAML==5.1           # CVE-2020-14343 - Arbitrary code execution via unsafe load()
 Jinja2==2.10.1        # CVE-2019-10906 - Sandbox escape vulnerability
 MarkupSafe==1.0       # CVE-2019-1010083 - Memory corruption in regex handling
-lxml==4.2.1           # CVE-2018-19787 - XML external entity (XXE) vulnerability
+lxml==4.9.1
 urllib3==1.23         # CVE-2019-11324 - CRLF injection via header injection
 paramiko==2.4.0       # CVE-2018-1000805 - Remote code execution in `ProxyCommand`
 pillow==5.4.1         # CVE-2019-16865 - Buffer overflow in image parsing
