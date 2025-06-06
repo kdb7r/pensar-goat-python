@@ -3,9 +3,10 @@ import openai
 # Insecure API key handling (should use environment variables or a secure vault)
 OPENAI_API_KEY = "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
+MAX_INPUT_LENGTH = 1000  # Set a reasonable maximum for the user input length
 
 def ai_agent(user_input):
-    """A vulnerable AI agent with prompt injection risk."""
+    """An AI agent with input validation to prevent resource exhaustion."""
     prompt = f"""
     You are an AI assistant. Answer the following user query:
     
@@ -22,9 +23,12 @@ def ai_agent(user_input):
     return response["choices"][0]["message"]["content"]
 
 
-# Example vulnerable usage
+# Example usage with input length check
 while True:
     user_query = input("Ask the AI: ")
     if user_query.lower() in ["exit", "quit"]:
         break
+    if len(user_query) > MAX_INPUT_LENGTH:
+        print(f"Input too long! Please limit your input to {MAX_INPUT_LENGTH} characters.")
+        continue
     print(ai_agent(user_query))
